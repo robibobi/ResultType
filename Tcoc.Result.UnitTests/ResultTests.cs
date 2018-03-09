@@ -22,5 +22,30 @@ namespace Tcoc.UnitTests
             error.Message.ShouldBe("Oh oh...");
         }
 
+        [Fact]
+        public void From_WhenValueNull_ReturnsError()
+        {
+            Result<object> sut = Result.From(default(object));
+
+            sut.ShouldBeOfType<Error<object>>();
+        }
+
+        [Fact]
+        public void From_WhenValueNotNull_ReturnsSuccess()
+        {
+            Result<int> sut = Result.From(5);
+
+            sut.ShouldBeOfType<Success<int>>();
+        }
+
+        [Fact]
+        public void From_WhenValueNullAndCustomMessage_ReturnsErrorWithCustomMessage()
+        {
+            Result<object> sut = Result.From(default(object), "i knew it...");
+
+            sut.ShouldBeOfType<Error<object>>();
+            (sut as Error<object>).Message.ShouldBe("i knew it...");
+        }
+
     }
 }

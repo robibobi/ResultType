@@ -42,14 +42,18 @@ namespace Tcoc
             return new Error<T>(message);
         }
 
-        public static Result<T> From<T>(T value)
+        public static Result<T> From<T>(T value, string onErroressage = default(string))
         {
             if (value == null)
-                return CreateError<T>(
-                    $"Result.From(..): The specified value" +
-                    $" was null. At {Environment.StackTrace}");
+            {
+                string msg = onErroressage ?? $"Result.From(..):" +
+                    $" The specified value was null. At {Environment.StackTrace}";
+                return CreateError<T>(msg);
+            }
             else
+            {
                 return CreateSuccess<T>(value);
+            }
         }
     }
 }
