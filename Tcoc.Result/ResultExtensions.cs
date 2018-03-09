@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace Tcoc.ResultType
+namespace Tcoc
 {
-    static class ResultExtensions
+    public static class ResultExtensions
     {
+        public static Result<T> ToResult<T>(this T value)
+        {
+            return Result.From(value);
+        }
+
         public static Result<T> Match<T>(this Result<T> self, Action<string> onError, Action<T> onSuccess)
         {
             switch (self)
@@ -54,32 +57,6 @@ namespace Tcoc.ResultType
         {
             return source.Bind(selector);
         }
-
-        public static Result<C> SelectMany<A, B, C>(this Result<A> source, Func<A, Result<B>> map, Func<A, B, C> selector)
-        {
-            switch (source)
-            {
-                case Success<A> s:
-                        switch (source.Bind(map))
-                        { 
-                        case Success<B> mB:
-                            return Result.From(selector(s.Value, mB.Value), "SelectMany value selector returned NULL.");
-                        case Error<B> eB:
-                            return new Error<C>(eB.Message);
-                        case null:
-                        default:
-                            return new Error<C>("TBD");
-                        }
-                case Error<A> eA:
-                    return new Error<C>(eA.Message);
-                case null:
-                default:
-                    return new Error<C>("TBD");
-                                           
-            }
-            
-        }
-    
 
       
 
